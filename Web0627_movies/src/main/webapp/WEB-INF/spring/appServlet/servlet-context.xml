@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans
+	xmlns="http://www.springframework.org/schema/mvc"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:beans="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc https://www.springframework.org/schema/mvc/spring-mvc.xsd
+		http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd">
+
+	<!-- DispatcherServlet Context: defines this servlet's request-processing 
+		infrastructure -->
+
+	<!-- Enables the Spring MVC @Controller programming model -->
+	<annotation-driven />
+
+	<!-- Handles HTTP GET requests for /resources/** by efficiently serving 
+		up static resources in the ${webappRoot}/resources directory -->
+	<resources mapping="/resources/**" location="/resources/" />
+
+	<!-- Resolves views selected for rendering by @Controllers to .jsp resources 
+		in the /WEB-INF/views directory -->
+	<beans:bean
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<beans:property name="prefix" value="/WEB-INF/views/" />
+		<beans:property name="suffix" value=".jsp" />
+	</beans:bean>
+
+
+
+
+
+	<!-- 파일 업로드 설정.. 스프링에서 파일 업로드 기능을 사용하기위해서 bean(객체)설정 -->
+	<beans:bean
+		class="org.springframework.web.multipart.commons.CommonsMultipartResolver"
+		id="multipartResolver">
+		<beans:property name="maxUploadSize" value="10448760"></beans:property> <!-- 10메가 용량제한설정 -->
+
+
+	</beans:bean>
+
+	<beans:bean class="java.lang.String" id="uploadPath">  <!-- 자바코드로 생성하기보다는 스프링에서 설정하고 가져다쓴다. -->
+		<beans:constructor-arg value="/tmp"></beans:constructor-arg>
+
+	</beans:bean>
+	<!-- String uploadPath = new String("/tmp") -->
+	<!-- 스프링에게 객체를 설정하고.. 객체의 변수의 값을 주입할 때는 setter, 생성자로 할 수 있다 . -->
+
+
+	<context:component-scan
+		base-package="com.human.movies" />
+	<context:component-scan
+		base-package="com.human.util" />
+
+	<beans:bean id="authenInterceptor"
+		class="com.human.interceptor.AuthenticationInterceptor">
+	</beans:bean>
+	<!--<interceptors> <interceptor> <exclude-mapping path="/" /> <exclude-mapping 
+		path="/resources/**" /> <exclude-mapping path="/login**" /> <exclude-mapping 
+		path="/logout**" /> <beans:ref bean="authenInterceptor"> </interceptor> </interceptors> -->
+	<interceptors>
+		<interceptor>
+
+
+
+			<!-- 세션에 있어얃되는 페이지 루트로 시작되는 모든 것. -->
+			<mapping path="/**" />  <!-- 모든 url은 인터셉터 대상입니다. -->
+
+			<!-- 지정된 URL은 제외입니다. -->
+			<!-- 로그인이 없어도 들어가야되는 것 들. --> <!-- 여기서 지젖ㅇ을 안해주면 url호출이 안된다. session이 없으면 호출이 안된다. -->
+			<exclude-mapping path="/" /> <!-- 홈화면은 잡지 않겠다. -->
+			<exclude-mapping path="/home**" />
+			<exclude-mapping path="/resources/**" />
+			<exclude-mapping path="/login**" />
+			<exclude-mapping path="/logout**" />
+			<exclude-mapping path="/u_input**" />
+			<exclude-mapping path="/u_findId**" />
+			<exclude-mapping path="/u_findPw**" />
+			<exclude-mapping path="/download**" />
+			<exclude-mapping path="/idCheck**" />
+			<exclude-mapping path="/m_detail**" />
+			<exclude-mapping path="/m_search**" />
+			<exclude-mapping path="/list_view**" />
+			<exclude-mapping path="/m_detail_c**" />
+			<exclude-mapping path="/moviesInfomation**" />
+			<exclude-mapping path="/freeBoard**" />
+			<exclude-mapping path="/detailBoard**" />
+			<exclude-mapping path="/serviceCenter**" />
+
+			<!-- <exclude-mapping path="/kakao**" /> -->
+
+			<beans:ref bean="authenInterceptor" /> <!-- 매핑에 포함된 url의 pre와 post를 정의한 객체 -->
+		</interceptor>
+	</interceptors>
+
+	<!-- 스프링에서 처리할 수 없는 요청은 tomcat에 위임 -->
+
+
+
+
+</beans:beans>

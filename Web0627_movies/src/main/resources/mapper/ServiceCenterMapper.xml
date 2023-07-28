@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.human.dao.IF_ServiceCenterDAO">
+
+
+	<insert id="scInsert"
+		parameterType="com.human.vo.ServiceCenterVO">
+		insert into serviceCenter values
+		(sc_seq.nextval,#{u_id},#{sc_title},#{sc_content},null,default,#{cnt})
+	</insert>
+
+
+	<select id="scSelect" resultType="com.human.vo.ServiceCenterVO"
+		parameterType="com.human.vo.PageVO">
+		select *
+		from(select rownum as rcol, sub.*
+		from (select *
+		from
+		serviceCenter
+		order by sc_num
+		desc) sub)
+		where rcol between
+		#{startNo} and #{endNo}
+	</select>
+
+	<select id="listCount" resultType="int">
+		select
+		count(*) from
+		serviceCenter
+	</select>
+
+	<update id="scUpdate"
+		parameterType="com.human.vo.ServiceCenterVO">
+		update servicecenter set sc_answer = #{sc_answer} where
+		sc_num = #{sc_num}
+	</update>
+
+
+	<!--검색기능(미완성) -->
+	<select id="scSearch" parameterType="String"
+		resultType="com.human.vo.ServiceCenterVO">
+		select * from serviceCenter where sc_title like
+		'%'||#{sWord}||'%'
+	</select>
+
+	<update id="cntplus" parameterType="int">
+		update serviceCenter set
+		cnt=cnt+1 where sc_num=#{sc_num}
+	</update>
+
+
+
+	<select id="cntList" resultType="com.human.vo.ServiceCenterVO">
+		select * from (select * from
+		serviceCenter order by cnt desc) where rownum &lt; = 6
+	</select>
+
+
+
+</mapper>

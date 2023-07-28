@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.human.dao.IF_MoviesDAO">
+
+	<insert id="insertMovie" parameterType="com.human.vo.MoviesVO">
+		insert into movies
+		values(#{m_name},
+		#{m_content},
+		#{m_country},
+		#{m_genre},
+		#{m_alimit},
+		#{m_actor},
+		#{m_director},
+		#{m_date},
+		#{m_time},
+		#{m_filename},
+		#{m_oneline},
+		default
+		)
+	</insert>
+
+
+
+
+
+	<select id="movieList" resultType="com.human.vo.MoviesVO"
+		parameterType="com.human.vo.PageVO">
+		select *
+		from(select rownum as
+		rcol, sub.*
+		from (select
+		movies.* from
+		movies
+		<!-- if문 들어갈 where절 자리 -->
+		order by m_name desc) sub)
+		where rcol between
+		#{startNo} and #{endNo}
+	</select>
+
+	<select id="listCount" resultType="int">
+		select
+		count(*) from movies
+	</select>
+
+
+
+
+
+
+
+
+
+
+
+
+
+	<select id="searchMovie" parameterType="String"
+		resultType="com.human.vo.MoviesVO">
+		select * from movies where m_name like '%'||#{Sword}||'%'
+	</select>
+
+	<select id="actionView" resultType="com.human.vo.MoviesVO">
+		SELECT * FROM (SELECT * FROM
+		movies WHERE m_genre = '액션' ORDER BY m_date
+		DESC) WHERE ROWNUM &lt;= 6
+	</select>
+	<select id="horrorView" resultType="com.human.vo.MoviesVO">
+		SELECT * FROM (SELECT * FROM
+		movies WHERE m_genre = '공포' ORDER BY m_date
+		DESC) WHERE ROWNUM &lt;= 6
+	</select>
+	<select id="romanceView" resultType="com.human.vo.MoviesVO">
+		SELECT * FROM (SELECT * FROM
+		movies WHERE m_genre = '로맨스' ORDER BY m_date
+		DESC) WHERE ROWNUM &lt;= 6
+	</select>
+	<select id="animationView" resultType="com.human.vo.MoviesVO">
+		SELECT * FROM (SELECT *
+		FROM movies WHERE m_genre = '애니메이션' ORDER BY m_date
+		DESC) WHERE ROWNUM
+		&lt;= 6
+	</select>
+	<select id="comedyView" resultType="com.human.vo.MoviesVO">
+		SELECT * FROM (SELECT * FROM
+		movies WHERE m_genre = '코미디' ORDER BY m_date
+		DESC) WHERE ROWNUM &lt;= 6
+	</select>
+
+	<select id="m_detail" resultType="com.human.vo.MoviesVO"
+		parameterType="String">
+		select * from movies where
+		m_name = #{m_name}
+	</select>
+	<update id="updateCnt" parameterType="String">
+		update movies set
+		m_views=m_views+1
+		where m_name=#{m_name}
+	</update>
+
+
+	<select id="moviesAllList" resultType="com.human.vo.MoviesVO"
+		parameterType="com.human.vo.PageVO">
+		select *
+		from(select rownum as
+		rcol, sub.*
+		from (select
+		movies.* from
+		movies
+		<!-- if문 들어갈 where절 자리 -->
+		order by m_name desc) sub)
+		where rcol between
+		#{startNo} and #{endNo}
+	</select>
+
+
+</mapper>

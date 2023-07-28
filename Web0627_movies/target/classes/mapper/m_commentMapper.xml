@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.human.dao.IF_M_CommentDAO">
+
+
+	<insert id="insert" parameterType="com.human.vo.m_commentVO">
+		insert into m_comment
+		values(#{m_name},#{c_starPoint},#{c_comment},#{u_id},default)
+	</insert>
+	<select id="selectComment" resultType="com.human.vo.m_commentVO"
+		parameterType="com.human.vo.PageVO">
+		select *
+		from(select rownum as rcol, sub.*
+		from (select
+		m_comment.* from
+		m_comment where m_name = #{m_name}
+		order by m_name
+		desc) sub)
+		where rcol between
+		#{startNo} and #{endNo}
+	</select>
+	<select id="listCount" resultType="int" parameterType="String">
+		select
+		count(*) from m_comment where m_name = #{m_name}
+	</select>
+
+
+	<delete id="delC" parameterType="java.util.Map">
+		delete m_comment where
+		u_id=#{u_id} and c_comment=#{c_comment}
+	</delete>
+
+
+</mapper>

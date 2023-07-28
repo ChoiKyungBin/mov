@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.human.dao.IF_M_WishListDAO">
+
+
+
+	<insert id="insert" parameterType="java.util.Map">
+		insert into m_wishList
+		values(#{u_id},#{m_name},default)
+	</insert>
+
+	<select id="myWishList" parameterType="String"
+		resultType="com.human.vo.M_wishListVO">
+		select * from M_wishList where u_id = #{id}
+	</select>
+	<select id="countWishList" parameterType="java.util.Map"
+		resultType="int">
+		select count(*) from m_wishList where u_id = #{u_id} and
+		m_name=#{m_name}
+	</select>
+	<delete id="selectDelete" parameterType="java.util.Map">
+		delete m_wishList where
+		u_id=#{u_id} and m_name=#{m_name}
+	</delete>
+
+
+</mapper>
